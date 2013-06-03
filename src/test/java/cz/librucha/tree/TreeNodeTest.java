@@ -2,21 +2,12 @@ package cz.librucha.tree;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 /**
  * @author librucha <librucha@gmail.com>
  */
-public class TreeNodeTest {
-
-	private String key() {
-		return RandomStringUtils.randomAlphabetic(6);
-	}
-
-	private String data() {
-		return RandomStringUtils.randomAlphabetic(3);
-	}
+public class TreeNodeTest extends TreeTest {
 
 	@Test
 	public void testAddNode() throws Exception {
@@ -25,7 +16,6 @@ public class TreeNodeTest {
 		assertThat(node).isNotNull();
 		assertThat(rootNode.getChildren()).isNotNull().isNotEmpty().hasSize(1);
 		assertThat(node.getParent()).isNotNull().isSameAs(rootNode);
-		assertThat(node.getSiblings()).isNotNull().isEmpty();
 	}
 
 	@Test
@@ -34,7 +24,17 @@ public class TreeNodeTest {
 		TreeNode<String> child1 = rootNode.addNode(key(), data());
 		TreeNode<String> child2 = rootNode.addNode(key(), data());
 		assertThat(rootNode.getChildren()).isNotNull().isNotEmpty().hasSize(2);
-		assertThat(child1.getSiblings()).isNotNull().isNotEmpty().hasSize(1);
-		assertThat(child2.getSiblings()).isNotNull().isNotEmpty().hasSize(1);
+	}
+
+	@Test
+	public void testRemoveNode() throws Exception {
+		String keyForRemove = key();
+		TreeNode<String> rootNode = new TreeNode<String>(key(), "data");
+		rootNode.addNode(key(), data());
+		TreeNode<String> nodeForRemove = rootNode.addNode(keyForRemove, data());
+		rootNode.addNode(key(), data());
+		assertThat(rootNode.getChildren()).isNotNull().isNotEmpty().hasSize(3);
+		rootNode.removeNode(keyForRemove);
+		assertThat(rootNode.getChildren()).isNotNull().isNotEmpty().hasSize(2).excludes(nodeForRemove);
 	}
 }

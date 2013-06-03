@@ -1,7 +1,6 @@
 package cz.librucha.tree;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -14,7 +13,6 @@ public class TreeNode<T> {
 	private final int level;
 	private final List<TreeNode<T>> children = new ArrayList<TreeNode<T>>(0);
 	private final TreeNode<T> parent;
-	private final Collection<TreeNode<T>> siblings = new ArrayList<TreeNode<T>>(0);
 
 	public TreeNode(String key, T data) {
 		this(key, data, null);
@@ -29,10 +27,22 @@ public class TreeNode<T> {
 
 	TreeNode<T> addNode(String key, T data) {
 		TreeNode<T> node = new TreeNode<T>(key, data, this);
-		node.siblings.clear();
-		
-		node.siblings.addAll(children);
+		this.getChildren().add(node);
 		return node;
+	}
+
+	void removeNode(String key) {
+		int idx = findChild(key);
+		getChildren().remove(idx);
+	}
+
+	private int findChild(String key) {
+		for (int i = 0; i < getChildren().size(); i++) {
+			if (key.equals(getChildren().get(i).getKey())) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public String getKey() {
@@ -53,10 +63,6 @@ public class TreeNode<T> {
 
 	public TreeNode<T> getParent() {
 		return parent;
-	}
-
-	public Collection<TreeNode<T>> getSiblings() {
-		return siblings;
 	}
 
 	@Override
