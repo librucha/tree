@@ -1,20 +1,21 @@
 package cz.librucha.tree.gson;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import cz.librucha.tree.AbstractTreeTest;
 import cz.librucha.tree.Tree;
-import cz.librucha.tree.TreeImpl;
 import cz.librucha.tree.TreeNode;
-import cz.librucha.tree.TreeTest;
 
 /**
  * @author librucha <librucha@gmail.com>
  */
-public class TreeSerializerTest extends TreeTest {
+public class TreeSerializerTest extends AbstractTreeTest {
 
 	/**
 	 * [0]
@@ -32,7 +33,7 @@ public class TreeSerializerTest extends TreeTest {
 
 	@Before
 	public void setUp() {
-		tree = new TreeImpl<String>("0", null);
+		tree = new Tree<String>("0", data());
 		TreeNode<String> n00 = tree.add("0_0", data());
 		tree.add("0_0_0", data(), n00);
 		TreeNode<String> n001 = tree.add("0_0_1", data(), n00);
@@ -41,13 +42,16 @@ public class TreeSerializerTest extends TreeTest {
 		TreeNode<String> n01 = tree.add("0_1", data());
 		tree.add("0_1_0", data(), n01);
 
-		gson = new GsonBuilder().registerTypeAdapter(TreeImpl.class, new TreeSerializer()).create();
+		gson = new GsonBuilder()
+				.registerTypeAdapter(Tree.class, new TreeSerializer())
+				.registerTypeAdapter(TreeNode.class, new TreeNodeSerializer())
+				.create();
 	}
 
 	@Test
 	public void testSerialize() {
 		String json = gson.toJson(tree);
-		System.out.println(json);
+		assertThat(json).isNotNull().isNotEmpty();
 	}
 
 }

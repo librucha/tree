@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * @author librucha <librucha@gmail.com>
  */
-public class TreeNodeTest extends TreeTest {
+public class TreeNodeTest extends AbstractTreeTest {
 
 	@Test
 	public void testAddNode() throws Exception {
