@@ -1,11 +1,19 @@
 package cz.librucha.tree;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang3.ArrayUtils;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 /**
  * @author librucha <librucha@gmail.com>
@@ -16,7 +24,7 @@ public class Tree<T> {
 	private final Map<String, TreeNode<T>> nodesMap = new HashMap<String, TreeNode<T>>();
 
 	public Tree() {
-		this(null, null);
+		this("ROOT", null);
 	}
 
 	public Tree(String key, T data) {
@@ -61,9 +69,8 @@ public class Tree<T> {
 
 	public TreeNode<T> add(String key, T data, TreeNode<T> parent) {
 		checkNotNull(key, "key must not be null");
-		checkArgument(!nodesMap.containsKey(key), "key is alredy presented in tree");
 		TreeNode<T> node = parent.addNode(key, data);
-		nodesMap.put(key, node);
+		nodesMap.put(node.getKey(), node);
 		return node;
 	}
 
@@ -84,6 +91,55 @@ public class Tree<T> {
 
 	public void clear() {
 		rootNode.getChildren().clear();
+	}
+
+	public List<T> getData() {
+		return Lists.newArrayList(Iterables.transform(nodesMap.values(), new Function<TreeNode<T>, T>() {
+			@Override
+			public T apply(TreeNode<T> node) {
+				return node.getData();
+			}
+		}));
+	}
+
+	public List<T> getData(final int... levels) {
+		List<T> data = new ArrayList<T>();
+		for (TreeNode<T> node : nodesMap.values()) {
+			for (int level : levels) {
+				if (node.getLevel() == level) {
+					data.add(node.getData());
+				}
+			}
+		}
+		return data;
+	}
+
+	public T getData(String key) {
+		TreeNode<T> node = nodesMap.get(key);
+		return node != null ? node.getData() : null;
+	}
+
+	public List<T> getBranchData(String key) {
+		List<T> data = new ArrayList<T>();
+		TreeNode<T> node = nodesMap.get(key);
+		while (node.getParent() != rootNode) {
+			data.add(node.getData());
+			node = node.getParent();
+		}
+		return data;
+	}
+
+	public TreeNode<T> getNode(String key) {
+		return nodesMap.get(key);
+	}
+
+	public List<TreeNode<T>> getNodes(final int... levels) {
+		return Lists.newArrayList(Iterables.filter(nodesMap.values(), new Predicate<TreeNode<T>>() {
+			@Override
+			public boolean apply(TreeNode<T> node) {
+				return ArrayUtils.contains(levels, node.getLevel());
+			}
+		}));
 	}
 
 	public <R> R walk(WalkingCallback<R, T> callback) {

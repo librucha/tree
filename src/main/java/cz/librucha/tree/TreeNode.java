@@ -14,18 +14,21 @@ public class TreeNode<T> {
 	private final List<TreeNode<T>> children = new ArrayList<TreeNode<T>>(0);
 	private final TreeNode<T> parent;
 
+	public static final String NODE_SEPARATOR = ":";
+
 	public TreeNode(String key, T data) {
 		this(key, data, null);
 	}
 
 	public TreeNode(String key, T data, TreeNode<T> parent) {
-		this.key = key;
+		this.key = parent != null ? parent.getKey() + NODE_SEPARATOR + key : key;
 		this.data = data;
 		this.parent = parent;
 		this.level = parent == null ? 0 : parent.getLevel() + 1;
 	}
 
 	TreeNode<T> addNode(String key, T data) {
+
 		TreeNode<T> node = new TreeNode<T>(key, data, this);
 		this.getChildren().add(node);
 		return node;

@@ -11,9 +11,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import cz.librucha.tree.AbstractTreeTest;
 import cz.librucha.tree.Tree;
 import cz.librucha.tree.TreeNode;
-import cz.librucha.tree.AbstractTreeTest;
 
 /**
  * @author librucha <librucha@gmail.com>

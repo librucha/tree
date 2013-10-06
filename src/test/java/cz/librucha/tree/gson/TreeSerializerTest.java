@@ -19,13 +19,13 @@ public class TreeSerializerTest extends AbstractTreeTest {
 
 	/**
 	 * [0]
-	 * .+-[0_0]
-	 * .|...+-[0_0_0]
-	 * .|...+-[0_0_1]
-	 * .|........+-[0_0_1_0]
-	 * .|..............+-[0_0_1_0_0]
-	 * .+-[0_1]
-	 * .....+-[0_1_0]
+	 * .+-[0:0]
+	 * .|...+-[0:0:0]
+	 * .|...+-[0:0:1]
+	 * .|........+-[0:0:1:0]
+	 * .|..............+-[0:0:1:0:0]
+	 * .+-[0:1]
+	 * .....+-[0:1:0]
 	 */
 
 	private Tree<String> tree;
@@ -34,13 +34,13 @@ public class TreeSerializerTest extends AbstractTreeTest {
 	@Before
 	public void setUp() {
 		tree = new Tree<String>("0", data());
-		TreeNode<String> n00 = tree.add("0_0", data());
-		tree.add("0_0_0", data(), n00);
-		TreeNode<String> n001 = tree.add("0_0_1", data(), n00);
-		TreeNode<String> n0010 = tree.add("0_0_1_0", data(), n001);
-		tree.add("0_0_1_0_0", data(), n0010);
-		TreeNode<String> n01 = tree.add("0_1", data());
-		tree.add("0_1_0", data(), n01);
+		TreeNode<String> n00 = tree.add("0", data());
+		tree.add("0", data(), n00);
+		TreeNode<String> n001 = tree.add("1", data(), n00);
+		TreeNode<String> n0010 = tree.add("0", data(), n001);
+		tree.add("0", data(), n0010);
+		TreeNode<String> n01 = tree.add("1", data());
+		tree.add("0", data(), n01);
 
 		gson = new GsonBuilder()
 				.registerTypeAdapter(Tree.class, new TreeSerializer())
@@ -51,6 +51,7 @@ public class TreeSerializerTest extends AbstractTreeTest {
 	@Test
 	public void testSerialize() {
 		String json = gson.toJson(tree);
+		System.out.println(json);
 		assertThat(json).isNotNull().isNotEmpty();
 	}
 
