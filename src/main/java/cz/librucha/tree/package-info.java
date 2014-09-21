@@ -1,3 +1,4 @@
-@ParametersAreNonnullByDefault package cz.librucha.tree;
+@ParametersAreNonnullByDefault
+@CheckReturnValue package cz.librucha.tree;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.*;
